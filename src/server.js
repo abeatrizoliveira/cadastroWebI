@@ -5,6 +5,7 @@ dotenv.config({
     path: path.resolve(__dirname, "..", ".env")
 });
 
+const userRotes = require("./routes/users.routes");
 const express = require("express");
 
 const PORT = process.env.PORT;
@@ -20,3 +21,4 @@ app.listen(PORT, function(){
 
 app.use("/", express.static(pagesPath));
 app.use("/assets", express.static(assetsPath));
+app.use("/users", userRotes);
