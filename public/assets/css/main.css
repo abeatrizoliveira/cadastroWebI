@@ -156,3 +156,27 @@ body {
     width: 1.1rem;
     height: 1.1rem;
 }
+
+.result {
+    min-height: 1.5rem;
+    border-radius: 0.5 rem;
+    padding: 0.75rem;
+    font-size:0.95rem;
+    line-height: 1.4rem;
+}
+
+.result.error{
+    background-color: #fef2f2;
+    color: #991b1b;
+}
+
+.result.loading {
+    background-color: #eff6ff;
+    color:#1d4ed8;
+}
+
+.result.success{
+    background-color: #f8fafc;
+    color: #0f172a;
+    border:0.065rem solid #e2e8f0;
+}

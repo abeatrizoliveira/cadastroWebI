@@ -1,6 +1,19 @@
 const userName = document.getElementById("user-name");
 const userEmail = document.getElementById("user-email");
 const usersTableBody = document.getElementById("user-table-body");
+const result = document.getElementById("result");
+const saveButton = document.getElementById("save-user");
+const clearButton = document.getElementById("clear-user");
+
+function showResult(message, type){
+  result.textContent = message;
+  result.className = `result ${type}`;
+}
+
+function clearForm(){
+  userName.value = "";
+  userEmail.value = "";
+}
 
 function renderEmptyTable(message) {
   usersTableBody.innerHTML = `
@@ -10,11 +23,23 @@ function renderEmptyTable(message) {
     `;
 }
 
+async function deleteUser(id) {
+  showResult("Excluindo registro...", "loading");
+  const response = await fetch(`/users/${id}`, { method: "DELETE" });
+  if (response.ok) {
+    const users = await response.json();
+    showResult("Usuário excluído com sucesso.", "success");
+    await loadUsers();
+  } else {
+    showResult("Problemas ao excluir o usuário.", "error");
+
+  }
+}
+
 function renderUsers(users) {
   if (users.length == 0) {
     renderEmptyTable("Nenhum usuário encontrado.");
   } else {
-    usersTableBody.innerHTML = "";
     let rowsTemp = "";
     for (let i = 0; i < users.length; i++) {
       console.log(users[i]);
@@ -43,9 +68,41 @@ async function loadUsers() {
   if (response.ok) {
     const users = await response.json();
     renderUsers(users);
+    console.log(users);
   } else {
     renderEmptyTable("Problemas ao obter os usuários.");
   }
 }
+
+async function createUser(){
+  const name = userName.value.trim();
+  const email = userEmail.value.trim();
+  if(name && email){
+    showResult("Salvando usuário...", "loading");
+    const response = await fetch(`/users`, { 
+        method: "POST", 
+        headers:  {"Content-Type": "application/json"},
+        body: JSON.stringify({name, email}), 
+      });
+  if (response.ok) {
+    const users = await response.json();
+    clearForm();
+    showResult("Usuário criado com sucesso.", "success");
+    await loadUsers();
+  } else {
+    showResult("Problemas ao criar o usuário.", "error");
+  }
+}else{
+  showResult("Preencha nome e email para continuar", "error");
+}
+}
+
+saveButton.addEventListener("click", function(){
+  createUser();
+});
+
+clearButton.addEventListener("click", function(){
+  clearForm();
+});
 
 loadUsers();

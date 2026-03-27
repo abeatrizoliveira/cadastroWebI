@@ -11,12 +11,13 @@ router.get("/", async function(_req, res){
 
 router.post("/", async function(req, res){
     const {name,email} = req.body;
-    const response = await createUser(name,email);
-    res.send(response);
+    const user = await createUser(name,email);
+    res.status(201).json(user);
 });
+
 router.delete("/:id", async function(req, res){
     const id = req.params.id;
-    const userRotes = await deleteUser(id);
+    const user = await deleteUser(id);
     if(user.message){
         res.status(404).json(user);
     } else{
